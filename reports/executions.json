@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "executions": [
+    {
+      "timestamp": "2026-11-07T15:07:10.316850Z",
+      "tabalyst_version": "0.2.1",
+      "source_file": "GEDEvent_v26_1.csv",
+      "html_file": "GEDEvent_v26_1.html",
+      "json_file": "GEDEvent_v26_1.json",
+      "rows": 417968,
+      "columns": 49,
+      "analysis_seconds": 74.9159,
+      "total_seconds": 75.0136,
+      "git": {
+        "available": true,
+        "commit": "1e5213ff31a2ae6ce2aceae7d0570b94c6ebe29c",
+        "dirty": true,
+        "state": "1e5213ff+working"
+      }
+    }
+  ]
+}
