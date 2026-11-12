@@ -9,7 +9,7 @@ Do **one step at a time**. When a step's **Check** passes, tick its box in the P
 ## Progress
 
 - [x] Step 1 — Project setup and raw data
-- [ ] Step 2 — Explore and check data quality
+- [x] Step 2 — Explore and check data quality
 - [ ] Step 3 — Clean and enrich (the ETL script)
 - [ ] Step 4 — Build the aggregated tables (JSON)
 - [ ] Step 5 — Web deck skeleton (4 slides)
