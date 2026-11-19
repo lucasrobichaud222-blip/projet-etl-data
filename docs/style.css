@@ -77,3 +77,9 @@ h1.big { font-size: 3.4rem; line-height: 1.15; max-width: 60rem; }
 #filters { flex-wrap: nowrap; white-space: nowrap; gap: .7rem; }
 .dhead h1 { font-size: 1.4rem; white-space: nowrap; }
 #filters input[type=range] { width: 5rem; }
+
+/* slide 4 */
+.pipe { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.5rem; }
+.pipe div { background: var(--panel); border: 1px solid var(--line); border-radius: .5rem; padding: .7rem 1rem; text-align: center; font-size: 1.2rem; flex: 1; }
+.pipe small { color: var(--muted); } .pipe span { color: var(--accent); font-size: 1.6rem; }
+code { background: #1d222b; padding: 0 .3rem; border-radius: .2rem; }

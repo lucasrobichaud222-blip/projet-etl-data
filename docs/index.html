@@ -97,7 +97,47 @@
       <div class="panel" style="grid-area:c6"><h3>Fréquence vs gravité <small>par pays : événements et morts par événement (échelles log)</small></h3><div id="c6" class="chart"></div></div>
     </div>
   </section>
-  <section class="slide" id="s4"><h1>Diapositive 4</h1></section>
+  <section class="slide" id="s4">
+    <h1>Méthodes, outils et IA</h1>
+    <div class="pipe">
+      <div>CSV brut<br><small>UCDP GED</small></div><span>→</span>
+      <div>etl/explore.py<br><small>vérifie la qualité</small></div><span>→</span>
+      <div>etl/clean.py<br><small>nettoie, ajoute des colonnes</small></div><span>→</span>
+      <div>etl/aggregate.py<br><small>résumés JSON</small></div><span>→</span>
+      <div>Page web<br><small>Plotly.js + globe.gl</small></div>
+    </div>
+    <div class="cols">
+      <div class="card">
+        <h2>Outils et décisions</h2>
+        <ul>
+          <li><b>Python + pandas</b> : tout le calcul lourd, une seule fois</li>
+          <li><b>JSON</b> agrégés (&lt; 2 Mo chacun) : le navigateur ne charge jamais les <span data-meta="events"></span> lignes</li>
+          <li><b>Plotly.js</b> et <b>globe.gl</b> (versions fixées), HTML/CSS/JS simples, sans framework</li>
+          <li><b>GitHub</b> : une étape = un commit ; le CSV de 274 Mo reste hors du dépôt</li>
+          <li>Garder <b>toutes</b> les années, nettoyage léger : on corrige seulement ce que les vérifications trouvent</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Où l'IA (Claude) a servi</h2>
+        <ul>
+          <li><b>Planification</b> : plan du projet, choix du globe 3D</li>
+          <li><b>Code</b> : scripts Python et page web écrits avec Claude Code</li>
+          <li><b>Rédaction</b> : textes des diapositives</li>
+        </ul>
+        <p class="muted">Rien n'est pris tel quel : chaque résultat est vérifié, puis je dois pouvoir l'expliquer.</p>
+      </div>
+      <div class="card">
+        <h2>Comment j'ai vérifié</h2>
+        <ul>
+          <li>Les totaux de chaque JSON égalent ceux de la table propre (<i>assert</i> dans le script)</li>
+          <li>Relancer <code>clean.py</code> donne exactement le même fichier (même empreinte)</li>
+          <li>Filtre Afrique 2010–2020 sur la page = calcul indépendant en pandas (mêmes 5 indicateurs)</li>
+          <li>Lecture à l'œil d'exemples réels (avant/après des bornes low/high)</li>
+        </ul>
+        <div class="question"><b>Ce que j'ai appris</b><br>Vérifier d'abord, résumer ensuite : un bon tableau de bord vient de données dont on connaît les limites.</div>
+      </div>
+    </div>
+  </section>
 </main>
 <nav id="nav">
   <button id="prev" aria-label="Précédent">←</button>
