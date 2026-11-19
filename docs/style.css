@@ -1,0 +1,22 @@
+:root {
+  --bg: #0e1116;
+  --panel: #171b22;
+  --line: #2a313c;
+  --text: #e8eaed;
+  --muted: #9aa4b2;
+  --accent: #ff6b4a;
+  --c1: #ff6b4a;
+  --c2: #4fa3e0;
+  --c3: #e8c547;
+  --c4: #8a94a3;
+}
+html { font-size: calc(100vw / 120); } /* 16px at 1920 wide: everything scales with rem */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 1rem/1.4 "Segoe UI", system-ui, sans-serif; overflow: hidden; }
+#deck { height: 100vh; width: 100vw; position: relative; }
+.slide { position: absolute; inset: 0; padding: 2rem 3rem 3.5rem; display: none; flex-direction: column; }
+.slide.active { display: flex; }
+h1 { margin: 0 0 1rem; font-size: 2.4rem; }
+#nav { position: fixed; bottom: .8rem; right: 1.5rem; display: flex; gap: .8rem; align-items: center; color: var(--muted); }
+#nav button { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: .4rem; padding: .2rem .9rem; font-size: 1.1rem; cursor: pointer; }
+#nav button:hover { border-color: var(--accent); }

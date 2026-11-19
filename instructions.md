@@ -12,7 +12,7 @@ Do **one step at a time**. When a step's **Check** passes, tick its box in the P
 - [x] Step 2 — Explore and check data quality
 - [x] Step 3 — Clean and enrich (the ETL script)
 - [x] Step 4 — Build the aggregated tables (JSON)
-- [ ] Step 5 — Web deck skeleton (4 slides)
+- [x] Step 5 — Web deck skeleton (4 slides)
 - [ ] Step 6 — Slide 1: the dataset and my choice
 - [ ] Step 7 — Slide 2: preprocessing
 - [ ] Step 8 — Slide 3: the dashboard (static charts)
