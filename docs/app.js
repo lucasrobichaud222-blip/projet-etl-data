@@ -20,5 +20,9 @@ document.addEventListener("keydown", e => {
 go((parseInt(location.hash.slice(1)) || 1) - 1);
 
 Promise.all(FILES.map(f => fetch(`data/${f}.json`).then(r => r.json()).then(j => (D[f] = j))))
-  .then(() => console.log("données chargées", Object.keys(D)))
+  .then(() => {
+    const fmt = n => typeof n === "number" ? n.toLocaleString("fr-CA") : n;
+    D.meta.values_raw = D.meta.events * D.meta.columns_raw;
+    document.querySelectorAll("[data-meta]").forEach(el => (el.textContent = fmt(D.meta[el.dataset.meta])));
+  })
   .catch(e => console.error("erreur de chargement", e));
