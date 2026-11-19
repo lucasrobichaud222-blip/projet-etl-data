@@ -4,145 +4,208 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Violence organisée depuis 1989</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.34.4/dist/globe.gl.min.js"></script>
 </head>
 <body>
+<div id="progress" aria-hidden="true"><i></i></div>
+
 <main id="deck">
-  <section class="slide" id="s1">
-    <p class="kicker">Atelier noté · 420-T83-OQ · Lucas Robichaud</p>
-    <h1 class="big">Qui meurt, où, et dans quel type de conflit&nbsp;?</h1>
-    <p class="sub">Évolution de la violence organisée dans le monde depuis 1989</p>
-    <div class="cols">
-      <div class="card">
-        <h2>Le jeu de données</h2>
-        <p><b>UCDP GED v26.1</b> (Uppsala Conflict Data Program, Georeferenced Event Dataset), publié par l'Université d'Uppsala.
-        <a href="https://ucdp.uu.se/downloads/" target="_blank" rel="noopener">ucdp.uu.se/downloads</a></p>
-        <div class="stats">
-          <div><span class="num" data-meta="events"></span><span>enregistrements<br>(1 ligne = 1 événement violent)</span></div>
-          <div><span class="num" data-meta="columns_raw"></span><span>champs<br>(colonnes)</span></div>
-          <div><span class="num" data-meta="values_raw"></span><span>valeurs au total</span></div>
+
+  <!-- 1 · Question + jeu de données -->
+  <section class="slide" id="s1" aria-label="Le jeu de données">
+    <div class="grain" aria-hidden="true"></div>
+    <div class="wrap">
+      <header class="hero">
+        <p class="kicker" data-reveal>Atelier noté · 420-T83-OQ · Lucas Robichaud</p>
+        <h1 class="display" data-reveal>Qui meurt, où, et dans quel type de conflit&nbsp;?</h1>
+        <p class="lede" data-reveal>Évolution de la violence organisée dans le monde depuis 1989, événement par événement.</p>
+        <div class="tickers" data-reveal>
+          <div class="ticker"><b class="mono" data-count="events">0</b><span>événements</span></div>
+          <div class="ticker crimson"><b class="mono" data-count="total_deaths">0</b><span>morts (estimation)</span></div>
+          <div class="ticker"><b class="mono" data-count="years">0</b><span>années couvertes</span></div>
         </div>
-        <p class="muted">Période : <span data-meta="date_min"></span> au <span data-meta="date_max"></span> · <span data-meta="countries"></span> pays · aucun filtrage ni échantillonnage</p>
-      </div>
-      <div class="card">
-        <h2>Variables clés</h2>
-        <ul>
-          <li><b>Date</b> de début et de fin de l'événement</li>
-          <li><b>Pays</b> et <b>région</b></li>
-          <li><b>Type de violence</b> : conflit étatique, non étatique, violence unilatérale</li>
-          <li><b>Acteurs</b> : côté A, côté B, conflit</li>
-          <li><b>Morts</b> : estimation <i>best</i>, bornes <i>low</i> et <i>high</i>, civils / combattants</li>
-          <li><b>Coordonnées</b> (latitude, longitude) et précision</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h2>Pourquoi ce choix</h2>
-        <ul>
-          <li>Un sujet qui compte : des millions de vies, mesurées événement par événement</li>
-          <li>Du temps, de l'espace et des catégories : évolution, carte, comparaisons</li>
-          <li>Données ouvertes, gros volume, qualité documentée</li>
-        </ul>
-        <div class="question"><b>Question guide</b><br>Comment la violence organisée a-t-elle évolué depuis 1989 : qui meurt, où, et dans quel type de conflit&nbsp;?</div>
-      </div>
-    </div>
-  </section>
-  <section class="slide" id="s2">
-    <h1>Prétraitement : vérifier avant de croire</h1>
-    <div class="cols">
-      <div class="card">
-        <h2>Vérifications (<span data-q="rows"></span> lignes)</h2>
-        <ul id="checks" class="checks"></ul>
-        <p class="muted">Un « 0 » est un résultat : le contrôle a été fait et rien n'a été trouvé.</p>
-      </div>
-      <div class="card">
-        <h2>Problème trouvé et correction</h2>
-        <p><b id="q-bad"></b> lignes ont des bornes incohérentes : <i>low</i> ou <i>high</i> du mauvais côté de l'estimation <i>best</i>.</p>
-        <p><b>Correction :</b> <i>low</i> = min(low, best) et <i>high</i> = max(high, best). L'estimation <i>best</i> ne change jamais.</p>
-        <table class="ba">
-          <caption>Avant / après — événement <span id="q-id"></span> (<span id="q-where"></span>)</caption>
-          <tr><th></th><th>best</th><th>low</th><th>high</th></tr>
-          <tr><td>Avant</td><td id="q-b1"></td><td id="q-l1" class="bad"></td><td id="q-h1"></td></tr>
-          <tr><td>Après</td><td id="q-b2"></td><td id="q-l2" class="ok"></td><td id="q-h2" class="ok"></td></tr>
-        </table>
-        <p><b>Ajouts :</b> décennie, mois, part de civils parmi les morts, libellés français du type de violence.</p>
-        <p class="muted">Aucune ligne supprimée. <span data-meta="events"></span> lignes avant et après.</p>
-      </div>
-      <div class="card">
-        <h2>Limites restantes</h2>
-        <ul>
-          <li><b id="q-imp"></b> événements localisés au niveau province ou moins précis : les tours du globe sont approximatives</li>
-          <li><b id="q-unc"></b> événements « peu clairs » (event_clarity = 2)</li>
-          <li>Morts = <b>estimations</b> (bornes low / high), pas des comptes exacts</li>
-          <li>Champs de texte souvent vides : en-tête de source <b id="q-hl"></b> %, district (adm_2) <b id="q-a2"></b> %</li>
-          <li>Seuls les événements que l'UCDP peut sourcer sont comptés</li>
-        </ul>
+      </header>
+
+      <div class="bento b3">
+        <article class="card" data-reveal>
+          <h2><i data-i="database"></i>Le jeu de données</h2>
+          <p><b>UCDP GED v26.1</b> (Uppsala Conflict Data Program, Georeferenced Event Dataset), Université d'Uppsala.
+            <a href="https://ucdp.uu.se/downloads/" target="_blank" rel="noopener">ucdp.uu.se/downloads</a></p>
+          <dl class="facts">
+            <div><dt>Enregistrements</dt><dd class="mono" data-meta="events"></dd></div>
+            <div><dt>Champs</dt><dd class="mono" data-meta="columns_raw"></dd></div>
+            <div><dt>Valeurs</dt><dd class="mono" data-meta="values_raw"></dd></div>
+          </dl>
+          <p class="muted">1 ligne = 1 événement violent. Du <span data-meta="date_min"></span> au <span data-meta="date_max"></span>, <span data-meta="countries"></span> pays. Aucun filtrage ni échantillonnage.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <h2><i data-i="layers"></i>Variables clés</h2>
+          <ul class="pills">
+            <li><i data-i="calendar"></i>Date de début et de fin</li>
+            <li><i data-i="pin"></i>Pays et région</li>
+            <li><i data-i="layers"></i>Type de violence</li>
+            <li><i data-i="users"></i>Acteurs : côté A, côté B, conflit</li>
+            <li><i data-i="activity"></i>Morts : best, low, high</li>
+            <li><i data-i="globe"></i>Latitude, longitude, précision</li>
+          </ul>
+          <p class="muted">Trois types de violence : conflit étatique, non étatique, violence unilatérale.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <h2><i data-i="target"></i>Pourquoi ce choix</h2>
+          <ul class="why">
+            <li>Un sujet qui compte : des millions de vies, mesurées événement par événement</li>
+            <li>Du temps, de l'espace et des catégories : évolution, globe, comparaisons</li>
+            <li>Données ouvertes, gros volume, qualité documentée</li>
+          </ul>
+          <blockquote class="callout emerald"><b>Question guide</b><br>Comment la violence organisée a-t-elle évolué depuis 1989 : qui meurt, où, et dans quel type de conflit&nbsp;?</blockquote>
+        </article>
       </div>
     </div>
   </section>
-  <section class="slide" id="s3">
-    <header class="dhead">
-      <h1>Tableau de bord : <span id="scope"></span></h1>
-      <div id="filters"></div>
-    </header>
-    <div class="kpis" id="kpis"></div>
-    <div class="dash">
-      <div class="panel" style="grid-area:c1"><h3>Morts par année <small>morts (estimation), par type de violence</small></h3><div id="c1" class="chart"></div></div>
-      <div class="panel globe" style="grid-area:g"><h3>Globe : zones de conflit <small>hauteur = événements · couleur = morts · survoler une tour</small></h3><div id="globe" class="chart"></div></div>
-      <div class="panel" style="grid-area:c4"><h3>10 conflits les plus meurtriers <small>morts</small></h3><div id="c4" class="chart"></div></div>
-      <div class="panel" style="grid-area:c3"><h3>Région × décennie <small>morts (milliers)</small></h3><div id="c3" class="chart"></div></div>
-      <div class="panel" style="grid-area:c5"><h3>Qui meurt ? <small>% des morts, par type de violence</small></h3><div id="c5" class="chart"></div></div>
-      <div class="panel" style="grid-area:note"><h3>À retenir</h3><ul id="note"></ul></div>
-      <div class="panel" style="grid-area:c6"><h3>Fréquence vs gravité <small>par pays : événements et morts par événement (échelles log)</small></h3><div id="c6" class="chart"></div></div>
+
+  <!-- 2 · Prétraitement -->
+  <section class="slide" id="s2" aria-label="Le prétraitement">
+    <div class="wrap">
+      <header>
+        <p class="kicker" data-reveal>Étape 2 · Préparer</p>
+        <h1 class="display sm" data-reveal>Vérifier avant de croire</h1>
+      </header>
+      <div class="bento b3">
+        <article class="card" data-reveal>
+          <h2><i data-i="search"></i>Vérifications <small>(<span data-q="rows"></span> lignes)</small></h2>
+          <ul id="checks" class="checks"></ul>
+          <p class="muted">Un « 0 » est un résultat : le contrôle a été fait et rien n'a été trouvé.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <h2><i data-i="wrench"></i>Problème trouvé et correction</h2>
+          <p><b id="q-bad"></b> lignes ont des bornes incohérentes : <i>low</i> ou <i>high</i> du mauvais côté de l'estimation <i>best</i>.</p>
+          <div class="ba">
+            <div class="ba-side">
+              <span class="tag crimson">Avant</span>
+              <dl><div><dt>best</dt><dd class="mono" id="q-b1"></dd></div><div class="bad"><dt>low</dt><dd class="mono" id="q-l1"></dd></div><div><dt>high</dt><dd class="mono" id="q-h1"></dd></div></dl>
+            </div>
+            <i data-i="arrow" class="ba-arrow"></i>
+            <div class="ba-side">
+              <span class="tag emerald">Après</span>
+              <dl><div><dt>best</dt><dd class="mono" id="q-b2"></dd></div><div class="ok"><dt>low</dt><dd class="mono" id="q-l2"></dd></div><div class="ok"><dt>high</dt><dd class="mono" id="q-h2"></dd></div></dl>
+            </div>
+          </div>
+          <p class="muted">Événement <span id="q-id"></span> (<span id="q-where"></span>). Correction : low = min(low, best), high = max(high, best). L'estimation <i>best</i> ne change jamais.</p>
+          <ol class="steps">
+            <li><b>Lire</b> les <span data-meta="events"></span> lignes</li>
+            <li><b>Vérifier</b> 8 contrôles</li>
+            <li><b>Corriger</b> les bornes low / high</li>
+            <li><b>Ajouter</b> décennie, mois, part de civils, libellés français</li>
+            <li><b>Résumer</b> en fichiers JSON (<span data-meta="columns_clean"></span> colonnes propres)</li>
+          </ol>
+        </article>
+
+        <article class="card" data-reveal>
+          <h2><i data-i="alert"></i>Limites restantes</h2>
+          <ul class="limits">
+            <li><b id="q-imp"></b> événements localisés au niveau province ou moins précis : les tours du globe sont approximatives</li>
+            <li><b id="q-unc"></b> événements « peu clairs » (event_clarity = 2)</li>
+            <li>Morts = <b>estimations</b> (bornes low / high), pas des comptes exacts</li>
+            <li>Champs de texte souvent vides : en-tête de source <b id="q-hl"></b> %, district (adm_2) <b id="q-a2"></b> %</li>
+            <li>Seuls les événements que l'UCDP peut sourcer sont comptés</li>
+          </ul>
+        </article>
+      </div>
     </div>
   </section>
-  <section class="slide" id="s4">
-    <h1>Méthodes, outils et IA</h1>
-    <div class="pipe">
-      <div>CSV brut<br><small>UCDP GED</small></div><span>→</span>
-      <div>etl/explore.py<br><small>vérifie la qualité</small></div><span>→</span>
-      <div>etl/clean.py<br><small>nettoie, ajoute des colonnes</small></div><span>→</span>
-      <div>etl/aggregate.py<br><small>résumés JSON</small></div><span>→</span>
-      <div>Page web<br><small>Plotly.js + globe.gl</small></div>
+
+  <!-- 3 · Tableau de bord -->
+  <section class="slide" id="s3" aria-label="Le tableau de bord">
+    <div class="wrap wide">
+      <header class="dhead">
+        <div>
+          <p class="kicker">Étape 3 · Analyser</p>
+          <h1 class="display xs">Tableau de bord : <span id="scope"></span></h1>
+        </div>
+        <div id="filters"></div>
+      </header>
+      <div class="kpis" id="kpis"></div>
+      <div class="dash">
+        <section class="card chart-card" style="grid-area:c1"><h3>Morts par année <small>morts (estimation), par type de violence</small></h3><p class="insight" id="i1"></p><div id="c1" class="chart"></div><span class="src">Source : UCDP GED v26.1</span></section>
+        <section class="card globe-card" style="grid-area:g"><h3>Zones de conflit <small>hauteur = événements · couleur = morts · survoler une tour</small></h3><p class="insight" id="ig"></p><div id="globe" class="chart"></div>
+          <div class="legend"><span>moins de morts</span><i></i><span>plus de morts</span></div></section>
+        <section class="card chart-card" style="grid-area:c4"><h3>10 conflits les plus meurtriers <small>morts</small></h3><p class="insight" id="i4"></p><div id="c4" class="chart"></div><span class="src">Source : UCDP GED v26.1</span></section>
+        <section class="card chart-card" style="grid-area:c3"><h3>Région × décennie <small>morts (milliers)</small></h3><p class="insight" id="i3"></p><div id="c3" class="chart"></div><span class="src">Source : UCDP GED v26.1</span></section>
+        <section class="card chart-card" style="grid-area:c5"><h3>Qui meurt ? <small>% des morts, par type de violence</small></h3><p class="insight" id="i5"></p><div id="c5" class="chart"></div><span class="src">Source : UCDP GED v26.1</span></section>
+        <section class="takeaways" style="grid-area:note" aria-label="À retenir" id="note"></section>
+        <section class="card chart-card" style="grid-area:c6"><h3>Fréquence vs gravité <small>par pays, échelles log</small></h3><p class="insight" id="i6"></p><div id="c6" class="chart"></div><span class="src">Source : UCDP GED v26.1</span></section>
+      </div>
     </div>
-    <div class="cols">
-      <div class="card">
-        <h2>Outils et décisions</h2>
-        <ul>
-          <li><b>Python + pandas</b> : tout le calcul lourd, une seule fois</li>
-          <li><b>JSON</b> agrégés (&lt; 2 Mo chacun) : le navigateur ne charge jamais les <span data-meta="events"></span> lignes</li>
-          <li><b>Plotly.js</b> et <b>globe.gl</b> (versions fixées), HTML/CSS/JS simples, sans framework</li>
-          <li><b>GitHub</b> : une étape = un commit ; le CSV de 274 Mo reste hors du dépôt</li>
-          <li>Garder <b>toutes</b> les années, nettoyage léger : on corrige seulement ce que les vérifications trouvent</li>
-        </ul>
+  </section>
+
+  <!-- 4 · Méthodes -->
+  <section class="slide" id="s4" aria-label="Méthodes, outils et IA">
+    <div class="wrap">
+      <header>
+        <p class="kicker" data-reveal>Étape 4 · Expliquer</p>
+        <h1 class="display sm" data-reveal>Méthodes, outils et IA</h1>
+      </header>
+
+      <div class="pipe" data-reveal>
+        <div class="beam" aria-hidden="true"><i></i></div>
+        <div class="node"><i data-i="database"></i><b>CSV brut</b><small>UCDP GED</small></div>
+        <div class="node"><i data-i="search"></i><b>explore.py</b><small>vérifie la qualité</small></div>
+        <div class="node"><i data-i="wrench"></i><b>clean.py</b><small>nettoie, ajoute des colonnes</small></div>
+        <div class="node"><i data-i="layers"></i><b>aggregate.py</b><small>résumés JSON</small></div>
+        <div class="node"><i data-i="chart"></i><b>Page web</b><small>Plotly.js + globe.gl</small></div>
       </div>
-      <div class="card">
-        <h2>Où l'IA (Claude) a servi</h2>
-        <ul>
-          <li><b>Planification</b> : plan du projet, choix du globe 3D</li>
-          <li><b>Code</b> : scripts Python et page web écrits avec Claude Code</li>
-          <li><b>Rédaction</b> : textes des diapositives</li>
-        </ul>
-        <p class="muted">Rien n'est pris tel quel : chaque résultat est vérifié, puis je dois pouvoir l'expliquer.</p>
+
+      <div class="bento b3">
+        <article class="card" data-reveal>
+          <h2>Outils et décisions</h2>
+          <ul class="badges"><li>Python</li><li>pandas</li><li>JSON</li><li>Plotly.js</li><li>globe.gl</li><li>GitHub Pages</li></ul>
+          <ul class="why">
+            <li>Tout le calcul lourd est fait une seule fois, en Python</li>
+            <li>JSON agrégés (&lt; 2 Mo chacun) : le navigateur ne charge jamais les <span data-meta="events"></span> lignes</li>
+            <li>HTML, CSS et JS simples, sans framework, bibliothèques à version fixée</li>
+            <li>Une étape = un commit ; le CSV de 274 Mo reste hors du dépôt</li>
+            <li>Toutes les années gardées, nettoyage léger : on corrige seulement ce que les vérifications trouvent</li>
+          </ul>
+        </article>
+        <article class="card" data-reveal>
+          <h2>Où l'IA (Claude) a servi</h2>
+          <ul class="why">
+            <li><b>Planification</b> : plan du projet, choix du globe 3D</li>
+            <li><b>Code</b> : scripts Python et page web écrits avec Claude Code</li>
+            <li><b>Rédaction</b> : textes des diapositives</li>
+          </ul>
+          <p class="muted">Rien n'est pris tel quel : chaque résultat est vérifié, puis je dois pouvoir l'expliquer.</p>
+        </article>
+        <article class="card" data-reveal>
+          <h2>Comment j'ai vérifié</h2>
+          <ul class="checks plain">
+            <li><i data-i="check"></i><span>Les totaux de chaque JSON égalent ceux de la table propre (<i>assert</i> dans le script)</span></li>
+            <li><i data-i="check"></i><span>Relancer <code>clean.py</code> donne exactement le même fichier (même empreinte)</span></li>
+            <li><i data-i="check"></i><span>Filtre Afrique 2010–2020 sur la page = calcul indépendant en pandas (mêmes 5 indicateurs)</span></li>
+            <li><i data-i="check"></i><span>Lecture à l'œil d'exemples réels (avant/après des bornes low/high)</span></li>
+          </ul>
+        </article>
       </div>
-      <div class="card">
-        <h2>Comment j'ai vérifié</h2>
-        <ul>
-          <li>Les totaux de chaque JSON égalent ceux de la table propre (<i>assert</i> dans le script)</li>
-          <li>Relancer <code>clean.py</code> donne exactement le même fichier (même empreinte)</li>
-          <li>Filtre Afrique 2010–2020 sur la page = calcul indépendant en pandas (mêmes 5 indicateurs)</li>
-          <li>Lecture à l'œil d'exemples réels (avant/après des bornes low/high)</li>
-        </ul>
-        <div class="question"><b>Ce que j'ai appris</b><br>Vérifier d'abord, résumer ensuite : un bon tableau de bord vient de données dont on connaît les limites.</div>
-      </div>
+      <blockquote class="quote" data-reveal>
+        <p>Vérifier d'abord, résumer ensuite : un bon tableau de bord vient de données dont on connaît les limites.</p>
+        <cite>Ce que j'ai appris</cite>
+      </blockquote>
     </div>
   </section>
 </main>
-<nav id="nav">
-  <button id="prev" aria-label="Précédent">←</button>
-  <span id="counter">1 / 4</span>
-  <button id="next" aria-label="Suivant">→</button>
+
+<nav id="nav" aria-label="Navigation des diapositives">
+  <button id="prev" aria-label="Précédent"><i data-i="left"></i></button>
+  <ol id="steps"></ol>
+  <button id="next" aria-label="Suivant"><i data-i="arrow"></i></button>
 </nav>
 <script src="dashboard.js"></script>
 <script src="app.js"></script>

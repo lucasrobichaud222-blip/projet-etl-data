@@ -67,7 +67,7 @@ save("grid_cells.json", {"types": types, "row_keys": ["cell", "year", "type", "e
 
 save("meta.json", {
     "events": EV, "columns_raw": 49, "columns_clean": int(pd.read_csv("data_clean.csv", nrows=1).shape[1]),
-    "values_clean": EV * 29, "total_deaths": TOT, "civilian_deaths": int(df["deaths_civilians"].sum()),
+    "values_raw": EV * 49, "values_clean": EV * 29, "total_deaths": TOT, "civilian_deaths": int(df["deaths_civilians"].sum()),
     "civilian_share": round(df["deaths_civilians"].sum() / TOT, 4), "countries": int(df["country"].nunique()),
     "year_min": int(df["year"].min()), "year_max": int(df["year"].max()),
     "date_min": str(df["date_start"].min().date()), "date_max": str(df["date_end"].max().date()),
