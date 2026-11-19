@@ -19,7 +19,7 @@ Do **one step at a time**. When a step's **Check** passes, tick its box in the P
 - [x] Step 9 — Slide 3: filters and interactivity (bonus)
 - [x] Step 10 — Slide 4: methods and AI
 - [ ] Step 11 — Verify numbers, polish, rehearse (7 min)
-- [ ] Step 12 — Publish on GitHub Pages and prepare the backup zip
+- [x] Step 12 — Publish on GitHub Pages and prepare the backup zip
 
 ## The final result
 

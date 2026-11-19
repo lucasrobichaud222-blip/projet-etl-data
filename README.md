@@ -21,3 +21,7 @@ cd docs && python -m http.server
 ```
 
 Then open http://localhost:8000.
+
+## Live link
+
+https://lucasrobichaud222-blip.github.io/projet-etl-data/
