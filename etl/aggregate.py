@@ -40,7 +40,7 @@ t = table(["conflict_name", "region", "type_label", "country", "year"])
 check(t, "conflicts")
 save("top_conflicts.json", t.to_dict("records"))
 
-t = df.groupby(["type_label", "year"]).agg(
+t = df.groupby(["country", "region", "year", "type_label"]).agg(
     side_a=("deaths_a", "sum"), side_b=("deaths_b", "sum"),
     civilians=("deaths_civilians", "sum"), unknown=("deaths_unknown", "sum")).reset_index()
 assert t[["side_a", "side_b", "civilians", "unknown"]].sum().sum() == TOT

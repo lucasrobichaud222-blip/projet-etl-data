@@ -81,7 +81,22 @@
       </div>
     </div>
   </section>
-  <section class="slide" id="s3"><h1>Diapositive 3</h1></section>
+  <section class="slide" id="s3">
+    <header class="dhead">
+      <h1>Tableau de bord : <span id="scope"></span></h1>
+      <div id="filters"></div>
+    </header>
+    <div class="kpis" id="kpis"></div>
+    <div class="dash">
+      <div class="panel" style="grid-area:c1"><h3>Morts par année <small>morts (estimation), par type de violence</small></h3><div id="c1" class="chart"></div></div>
+      <div class="panel globe" style="grid-area:g"><h3>Globe : zones de conflit <small>hauteur = événements · couleur = morts · survoler une tour</small></h3><div id="globe" class="chart"></div></div>
+      <div class="panel" style="grid-area:c4"><h3>10 conflits les plus meurtriers <small>morts</small></h3><div id="c4" class="chart"></div></div>
+      <div class="panel" style="grid-area:c3"><h3>Région × décennie <small>morts (milliers)</small></h3><div id="c3" class="chart"></div></div>
+      <div class="panel" style="grid-area:c5"><h3>Qui meurt ? <small>% des morts, par type de violence</small></h3><div id="c5" class="chart"></div></div>
+      <div class="panel" style="grid-area:note"><h3>À retenir</h3><ul id="note"></ul></div>
+      <div class="panel" style="grid-area:c6"><h3>Fréquence vs gravité <small>par pays : événements et morts par événement (échelles log)</small></h3><div id="c6" class="chart"></div></div>
+    </div>
+  </section>
   <section class="slide" id="s4"><h1>Diapositive 4</h1></section>
 </main>
 <nav id="nav">
@@ -89,6 +104,7 @@
   <span id="counter">1 / 4</span>
   <button id="next" aria-label="Suivant">→</button>
 </nav>
+<script src="dashboard.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

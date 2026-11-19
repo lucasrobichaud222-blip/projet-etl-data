@@ -45,3 +45,20 @@ h1.big { font-size: 3.4rem; line-height: 1.15; max-width: 60rem; }
 .ba caption { text-align: left; color: var(--muted); padding-bottom: .4rem; }
 .ba th, .ba td { padding: .5rem; border: 1px solid var(--line); }
 .ba .bad { color: var(--c1); font-weight: 700; } .ba .ok { color: #6fcf97; font-weight: 700; }
+
+/* slide 3: dashboard */
+#s3 { padding: 1rem 1.5rem 2.6rem; }
+.dhead { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.dhead h1 { font-size: 1.7rem; margin: 0 0 .5rem; }
+.kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: .8rem; margin-bottom: .6rem; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: .5rem; padding: .4rem .9rem; }
+.kpi .v { font-size: 2rem; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--muted); font-size: .9rem; }
+.dash { flex: 1; min-height: 0; display: grid; gap: .6rem; grid-template-columns: 1.15fr 1.5fr 1.15fr; grid-template-rows: repeat(3, minmax(0, 1fr));
+  grid-template-areas: "c1 g c4" "c3 g c5" "note g c6"; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: .5rem; padding: .4rem .6rem; display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; }
+.panel h3 { margin: 0; font-size: 1rem; } .panel h3 small { color: var(--muted); font-weight: 400; font-size: .8rem; margin-left: .4rem; }
+.chart { flex: 1; min-height: 0; min-width: 0; position: relative; }
+.panel ul { margin: .3rem 0 0; padding-left: 1.1rem; font-size: .95rem; } .panel li { margin-bottom: .25rem; }
+.gtip { font: 13px/1.35 "Segoe UI", sans-serif; background: #0e1116ee; color: #e8eaed; border: 1px solid #2a313c; border-radius: 6px; padding: 8px 10px; min-width: 210px; }
+.gtip b { color: #ff6b4a; }

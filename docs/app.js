@@ -24,6 +24,7 @@ Promise.all(FILES.map(f => fetch(`data/${f}.json`).then(r => r.json()).then(j =>
     const fmt = n => typeof n === "number" ? n.toLocaleString("fr-CA") : n;
     D.meta.values_raw = D.meta.events * D.meta.columns_raw;
     fillQuality();
+    render();
     document.querySelectorAll("[data-meta]").forEach(el => (el.textContent = fmt(D.meta[el.dataset.meta])));
   })
   .catch(e => console.error("erreur de chargement", e));
