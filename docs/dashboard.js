@@ -97,7 +97,7 @@ function renderGlobe() {
   if (!globe) {
     globe = Globe()(el).globeImageUrl("https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-dark.jpg")
       .backgroundColor("rgba(0,0,0,0)").pointLat("lat").pointLng("lon").pointResolution(4).pointsMerge(false)
-      .pointRadius(0.45).pointLabel(tip);
+      .pointRadius(0.45).pointLabel(tip).onPointClick(p => setCountry(p.cell.country));
     globe.pointOfView({ lat: 20, lng: 30, altitude: 2.3 });
     globe.controls().autoRotate = true;
     globe.controls().autoRotateSpeed = 0.4;
@@ -130,9 +130,50 @@ function tip(p) {
 }
 
 function render() {
+  if (!document.querySelector("#filters input")) return initFilters()(); // first call builds the controls, then renders
   const cy = D.by_country_year.filter(keep), sp = D.deaths_split.filter(keep), cf = D.top_conflicts.filter(keep);
   const k = renderKpis(cy);
   renderCharts(cy, sp, cf);
   renderNote(cy, k, cf);
   renderGlobe();
+  const sc = document.getElementById("c6");
+  if (!sc.dataset.click) { sc.dataset.click = 1; sc.on("plotly_click", e => setCountry(e.points[0].text)); }
+}
+
+// ---------- Filters ----------
+function initFilters() {
+  const f = document.getElementById("filters");
+  f.innerHTML = `
+    <label>Années <b id="yl"></b>
+      <input type="range" id="y0" min="1989" max="2025" value="1989"><input type="range" id="y1" min="1989" max="2025" value="2025"></label>
+    <label>Région <select id="reg"><option value="">Monde</option>${Object.entries(REG).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>
+    <span class="types">${TYPES.map((t, i) => `<label class="tg"><input type="checkbox" checked data-t="${t}"><span style="--c:${TYPE_COLOR[i]}">${t}</span></label>`).join("")}</span>
+    <button id="cty" hidden></button>
+    <button id="reset">Réinitialiser</button>`;
+  const $ = id => document.getElementById(id);
+  const sync = () => {
+    state.y0 = Math.min($("y0").value, $("y1").value); state.y1 = Math.max($("y0").value, $("y1").value);
+    state.y0 = +state.y0; state.y1 = +state.y1;
+    state.region = $("reg").value || null;
+    state.types = new Set([...f.querySelectorAll("[data-t]")].filter(c => c.checked).map(c => c.dataset.t));
+    $("yl").textContent = `${state.y0}–${state.y1}`;
+    $("cty").hidden = !state.country;
+    $("cty").textContent = state.country ? `Pays : ${state.country} ✕` : "";
+    render();
+  };
+  f.oninput = sync;
+  $("cty").onclick = () => { state.country = null; sync(); };
+  $("reset").onclick = () => {
+    $("y0").value = 1989; $("y1").value = 2025; $("reg").value = "";
+    f.querySelectorAll("[data-t]").forEach(c => (c.checked = true));
+    state.country = null; sync();
+    globe && globe.pointOfView({ lat: 20, lng: 30, altitude: 2.3 }, 800);
+  };
+  $("reg").addEventListener("change", () => { // turn the globe towards the chosen region
+    const pts = globe && globe.pointsData();
+    const r = pts && pts.filter(p => !state.region || p.cell.region === state.region);
+    if (state.region && r.length) globe.pointOfView({ lat: r.reduce((s, p) => s + p.lat, 0) / r.length, lng: r.reduce((s, p) => s + p.lon, 0) / r.length, altitude: 1.8 }, 800);
+  });
+  window.setCountry = c => { state.country = state.country === c ? null : c; sync(); };
+  return sync;
 }

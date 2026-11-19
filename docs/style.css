@@ -62,3 +62,18 @@ h1.big { font-size: 3.4rem; line-height: 1.15; max-width: 60rem; }
 .panel ul { margin: .3rem 0 0; padding-left: 1.1rem; font-size: .95rem; } .panel li { margin-bottom: .25rem; }
 .gtip { font: 13px/1.35 "Segoe UI", sans-serif; background: #0e1116ee; color: #e8eaed; border: 1px solid #2a313c; border-radius: 6px; padding: 8px 10px; min-width: 210px; }
 .gtip b { color: #ff6b4a; }
+
+/* filters */
+#filters { display: flex; gap: 1rem; align-items: center; font-size: .9rem; flex-wrap: wrap; justify-content: flex-end; }
+#filters label { display: flex; align-items: center; gap: .4rem; color: var(--muted); }
+#filters input[type=range] { width: 7rem; accent-color: var(--accent); }
+#filters select, #filters button { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: .3rem; padding: .2rem .5rem; font-size: .9rem; }
+#filters button { cursor: pointer; } #filters button:hover { border-color: var(--accent); }
+#filters button[hidden] { display: none; }
+.tg { cursor: pointer; } .tg input { display: none; }
+.tg span { border: 1px solid var(--c); color: var(--c); border-radius: .3rem; padding: .15rem .5rem; opacity: .35; }
+.tg input:checked + span { opacity: 1; background: #ffffff10; }
+.types { display: flex; gap: .4rem; }
+#filters { flex-wrap: nowrap; white-space: nowrap; gap: .7rem; }
+.dhead h1 { font-size: 1.4rem; white-space: nowrap; }
+#filters input[type=range] { width: 5rem; }
