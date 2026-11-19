@@ -14,7 +14,7 @@ Do **one step at a time**. When a step's **Check** passes, tick its box in the P
 - [x] Step 4 — Build the aggregated tables (JSON)
 - [x] Step 5 — Web deck skeleton (4 slides)
 - [x] Step 6 — Slide 1: the dataset and my choice
-- [ ] Step 7 — Slide 2: preprocessing
+- [x] Step 7 — Slide 2: preprocessing
 - [ ] Step 8 — Slide 3: the dashboard (static charts)
 - [ ] Step 9 — Slide 3: filters and interactivity (bonus)
 - [ ] Step 10 — Slide 4: methods and AI

@@ -35,3 +35,13 @@ h1.big { font-size: 3.4rem; line-height: 1.15; max-width: 60rem; }
 .stats div { display: flex; align-items: center; gap: 1rem; }
 .num { font-size: 2.6rem; font-weight: 700; color: var(--text); min-width: 9rem; font-variant-numeric: tabular-nums; }
 .question { margin-top: 1.5rem; padding: 1rem; border-left: .25rem solid var(--accent); background: #1d222b; }
+
+/* slide 2 */
+.checks { list-style: none; padding: 0 !important; }
+.checks li { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--line); padding-bottom: .5rem; }
+.checks b { font-variant-numeric: tabular-nums; }
+.checks .zero b { color: #6fcf97; } .checks .nonzero b { color: var(--c3); }
+.ba { width: 100%; border-collapse: collapse; margin: 1rem 0; background: #1d222b; text-align: center; }
+.ba caption { text-align: left; color: var(--muted); padding-bottom: .4rem; }
+.ba th, .ba td { padding: .5rem; border: 1px solid var(--line); }
+.ba .bad { color: var(--c1); font-weight: 700; } .ba .ok { color: #6fcf97; font-weight: 700; }

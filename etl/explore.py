@@ -73,3 +73,31 @@ for title, sub in examples:
     log()
 
 open("notes/quality_log.md", "w", encoding="utf-8").write("\n".join(out))
+
+# Numbers for slide 2 (so nothing on the slide is typed by hand)
+import json
+
+ex = order_bad.iloc[0]
+quality = {
+    "rows": n, "columns": c, "values": n * c,
+    "checks": [
+        {"label": "Identifiants (id) en double", "count": dups},
+        {"label": "Dates illisibles (début ou fin)", "count": bad_ds + bad_de},
+        {"label": "Date de début après la date de fin", "count": order},
+        {"label": "Année ≠ année de la date de début", "count": yr},
+        {"label": "Coordonnées manquantes ou hors limites", "count": int(bad_coord.sum())},
+        {"label": "Morts négatifs", "count": neg},
+        {"label": "best ≠ somme des 4 colonnes de morts", "count": len(mismatch)},
+        {"label": "Bornes incohérentes (low ≤ best ≤ high faux)", "count": len(order_bad)},
+    ],
+    "example": {"id": int(ex["id"]), "country": ex["country"], "year": int(ex["year"]), "best": int(ex["best"]),
+                "low_before": int(ex["low"]), "high_before": int(ex["high"]),
+                "low_after": int(min(ex["low"], ex["best"])), "high_after": int(max(ex["high"], ex["best"]))},
+    "limits": {
+        "imprecise_location": int((df["where_prec"] >= 4).sum()),
+        "unclear_events": int((df["event_clarity"] == 2).sum()),
+        "missing_headline_pct": round(float(miss["source_headline"] / n * 100), 1),
+        "missing_adm2_pct": round(float(miss["adm_2"] / n * 100), 1),
+    },
+}
+json.dump(quality, open("docs/data/quality.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)

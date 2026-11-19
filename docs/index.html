@@ -48,7 +48,39 @@
       </div>
     </div>
   </section>
-  <section class="slide" id="s2"><h1>Diapositive 2</h1></section>
+  <section class="slide" id="s2">
+    <h1>Prétraitement : vérifier avant de croire</h1>
+    <div class="cols">
+      <div class="card">
+        <h2>Vérifications (<span data-q="rows"></span> lignes)</h2>
+        <ul id="checks" class="checks"></ul>
+        <p class="muted">Un « 0 » est un résultat : le contrôle a été fait et rien n'a été trouvé.</p>
+      </div>
+      <div class="card">
+        <h2>Problème trouvé et correction</h2>
+        <p><b id="q-bad"></b> lignes ont des bornes incohérentes : <i>low</i> ou <i>high</i> du mauvais côté de l'estimation <i>best</i>.</p>
+        <p><b>Correction :</b> <i>low</i> = min(low, best) et <i>high</i> = max(high, best). L'estimation <i>best</i> ne change jamais.</p>
+        <table class="ba">
+          <caption>Avant / après — événement <span id="q-id"></span> (<span id="q-where"></span>)</caption>
+          <tr><th></th><th>best</th><th>low</th><th>high</th></tr>
+          <tr><td>Avant</td><td id="q-b1"></td><td id="q-l1" class="bad"></td><td id="q-h1"></td></tr>
+          <tr><td>Après</td><td id="q-b2"></td><td id="q-l2" class="ok"></td><td id="q-h2" class="ok"></td></tr>
+        </table>
+        <p><b>Ajouts :</b> décennie, mois, part de civils parmi les morts, libellés français du type de violence.</p>
+        <p class="muted">Aucune ligne supprimée. <span data-meta="events"></span> lignes avant et après.</p>
+      </div>
+      <div class="card">
+        <h2>Limites restantes</h2>
+        <ul>
+          <li><b id="q-imp"></b> événements localisés au niveau province ou moins précis : les tours du globe sont approximatives</li>
+          <li><b id="q-unc"></b> événements « peu clairs » (event_clarity = 2)</li>
+          <li>Morts = <b>estimations</b> (bornes low / high), pas des comptes exacts</li>
+          <li>Champs de texte souvent vides : en-tête de source <b id="q-hl"></b> %, district (adm_2) <b id="q-a2"></b> %</li>
+          <li>Seuls les événements que l'UCDP peut sourcer sont comptés</li>
+        </ul>
+      </div>
+    </div>
+  </section>
   <section class="slide" id="s3"><h1>Diapositive 3</h1></section>
   <section class="slide" id="s4"><h1>Diapositive 4</h1></section>
 </main>

@@ -1,0 +1,55 @@
+{
+ "rows": 417968,
+ "columns": 49,
+ "values": 20480432,
+ "checks": [
+  {
+   "label": "Identifiants (id) en double",
+   "count": 0
+  },
+  {
+   "label": "Dates illisibles (début ou fin)",
+   "count": 0
+  },
+  {
+   "label": "Date de début après la date de fin",
+   "count": 0
+  },
+  {
+   "label": "Année ≠ année de la date de début",
+   "count": 0
+  },
+  {
+   "label": "Coordonnées manquantes ou hors limites",
+   "count": 0
+  },
+  {
+   "label": "Morts négatifs",
+   "count": 0
+  },
+  {
+   "label": "best ≠ somme des 4 colonnes de morts",
+   "count": 0
+  },
+  {
+   "label": "Bornes incohérentes (low ≤ best ≤ high faux)",
+   "count": 5075
+  }
+ ],
+ "example": {
+  "id": 69047,
+  "country": "Serbia (Yugoslavia)",
+  "year": 1991,
+  "best": 24,
+  "low_before": 25,
+  "high_before": 24,
+  "low_after": 24,
+  "high_after": 24
+ },
+ "limits": {
+  "imprecise_location": 62751,
+  "unclear_events": 30561,
+  "missing_headline_pct": 23.3,
+  "missing_adm2_pct": 17.6
+ }
+}
