@@ -1,7 +1,7 @@
 // ---------- Slide 3: dashboard (relies on D, loaded in app.js) ----------
 const REG = { "Middle East": "Moyen-Orient", Asia: "Asie", Africa: "Afrique", Europe: "Europe", Americas: "Amériques" };
 const TYPES = ["Conflit étatique", "Non étatique", "Violence unilatérale"];
-const state = { y0: 1989, y1: 2025, region: null, types: new Set(TYPES), country: null };
+const state = { y0: 1989, y1: 2025, region: null, types: new Set(TYPES), country: null, log: false };
 
 // One theme: colors come from the CSS variables, so style.css is the single source.
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -41,6 +41,15 @@ function layout(extra = {}) {
 const plot = (id, data, lay) => Plotly.react(id, data, layout(lay), { responsive: true, displayModeBar: false });
 const axis = (o = {}) => Object.assign({ gridcolor: THEME().grid, zeroline: false, linecolor: "rgba(0,0,0,0)" }, o);
 
+// 5-year centred moving average of total deaths: shows the real trend under the 1994 spike
+function trend(cy, years) {
+  const m = {};
+  cy.forEach(r => (m[r.year] = (m[r.year] || 0) + r.deaths));
+  const y = years.map((_, i) => { const w = years.slice(Math.max(0, i - 2), i + 3).map(v => m[v] || 0); return w.reduce((a, b) => a + b, 0) / w.length; });
+  return [{ type: "scatter", mode: "lines", name: "Tendance (moy. 5 ans)", x: years, y, line: { color: THEME().ink, width: 2, dash: "dot" },
+    hovertemplate: "%{x}<br>moyenne 5 ans : %{y:,.0f} morts<extra></extra>" }];
+}
+
 function renderKpis(cy) {
   const ev = sum(cy, "events"), de = sum(cy, "deaths"), ci = sum(cy, "civilian_deaths");
   const yrs = Object.entries(by(cy, "year")).map(([y, r]) => [y, sum(r, "deaths")]).sort((a, b) => b[1] - a[1]);
@@ -52,6 +61,7 @@ function renderKpis(cy) {
     [yrs[0] ? yrs[0][0] : "–", "année la plus meurtrière", ""],
   ];
   document.getElementById("kpis").innerHTML = k.map(([v, l, c]) => `<div class="kpi ${c}"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+  document.getElementById("count").textContent = `${fmt(ev)} événements sélectionnés sur ${fmt(D.meta.events)}`;
   document.getElementById("scope").textContent = `${state.y0}–${state.y1}` + (state.region ? ", " + REG[state.region] : ", monde entier") + (state.country ? ", " + state.country : "");
   return { de, ci, yrs };
 }
@@ -65,7 +75,7 @@ function renderCharts(cy, sp, cf) {
     cy.filter(r => r.type_label === t).forEach(r => (m[r.year] = (m[r.year] || 0) + r.deaths));
     return { type: "bar", name: t, x: years, y: years.map(y => m[y] || 0), marker: { color: tc[TYPES.indexOf(t)] },
       hovertemplate: "%{x}<br>" + t + " : %{y:,.0f} morts<extra></extra>" };
-  }), { barmode: "stack", bargap: 0.15 });
+  }).concat(trend(cy, years)), { barmode: "stack", bargap: 0.15, yaxis: axis(state.log ? { type: "log", dtick: 1 } : { type: "linear" }) });
 
   // 3: heatmap region x decade (colour on a square-root scale so small cells stay visible)
   const regs = Object.keys(REG), decs = [...new Set(cy.map(r => decade(r.year)))].sort();
@@ -192,18 +202,28 @@ function initFilters() {
       <input type="range" id="y0" min="1989" max="2025" value="1989" aria-label="Année de début"><input type="range" id="y1" min="1989" max="2025" value="2025" aria-label="Année de fin"></label>
     <label>Région <select id="reg"><option value="">Monde</option>${Object.entries(REG).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>
     <span class="types">${TYPES.map((t, i) => `<label class="tg"><input type="checkbox" checked data-t="${t}"><span style="--c:${tc[i]}">${t}</span></label>`).join("")}</span>
+    <label class="tg"><input type="checkbox" id="log"><span style="--c:${THEME().ink}">Échelle log (graph. 1)</span></label>
     <button id="cty" hidden></button>
     <button id="reset">Réinitialiser</button>`;
   const $ = id => document.getElementById(id);
   const sync = () => {
     state.y0 = +Math.min($("y0").value, $("y1").value); state.y1 = +Math.max($("y0").value, $("y1").value);
     state.region = $("reg").value || null;
+    state.log = $("log").checked;
     state.types = new Set([...f.querySelectorAll("[data-t]")].filter(c => c.checked).map(c => c.dataset.t));
     $("yl").textContent = `${state.y0}–${state.y1}`;
     $("cty").hidden = !state.country;
     $("cty").textContent = state.country ? `Pays : ${state.country} ✕` : "";
+    saveUrl();
     render();
   };
+  const q = new URLSearchParams(location.search); // restore a shared view
+  if (q.has("y0")) $("y0").value = q.get("y0");
+  if (q.has("y1")) $("y1").value = q.get("y1");
+  if (q.has("region") && REG[q.get("region")]) $("reg").value = q.get("region");
+  if (q.has("t")) { const on = q.get("t").split(",").map(i => TYPES[i]); f.querySelectorAll("[data-t]").forEach(c => (c.checked = on.includes(c.dataset.t))); }
+  if (q.get("log") === "1") $("log").checked = true;
+  if (q.has("country")) state.country = q.get("country");
   f.oninput = sync;
   $("cty").onclick = () => { state.country = null; sync(); };
   $("reset").onclick = () => {
@@ -219,4 +239,18 @@ function initFilters() {
   });
   window.setCountry = c => { state.country = state.country === c ? null : c; sync(); };
   return sync;
+}
+
+// Keep the filters in the address bar so the exact view can be shared or reloaded.
+function saveUrl() {
+  const q = new URLSearchParams(location.search);
+  ["y0", "y1", "region", "t", "log", "country"].forEach(k => q.delete(k));
+  if (state.y0 !== 1989) q.set("y0", state.y0);
+  if (state.y1 !== 2025) q.set("y1", state.y1);
+  if (state.region) q.set("region", state.region);
+  if (state.types.size !== TYPES.length) q.set("t", TYPES.map((t, i) => (state.types.has(t) ? i : "")).filter(i => i !== "").join(","));
+  if (state.log) q.set("log", 1);
+  if (state.country) q.set("country", state.country);
+  const qs = q.toString();
+  history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
 }
