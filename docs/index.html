@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Violence organisée depuis 1989</title>
+<title>Les réalités humaines des conflits</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
     <div class="wrap">
       <header class="hero">
         <p class="kicker" data-reveal>Atelier noté · 420-T83-OQ · Lucas Robichaud</p>
-        <h1 class="display" data-reveal>Qui meurt, où, et dans quel type de conflit&nbsp;?</h1>
+        <h1 class="display" data-reveal>Les réalités humaines des conflits&nbsp;: où, qui et dans quel contexte</h1>
         <p class="lede" data-reveal>Évolution de la violence organisée dans le monde depuis 1989, événement par événement.</p>
         <div class="tickers" data-reveal>
           <div class="ticker"><b class="mono" data-count="events">0</b><span>événements</span></div>
@@ -111,11 +111,11 @@
         <article class="card" data-reveal>
           <h2><i data-i="alert"></i>Limites restantes</h2>
           <ul class="limits">
-            <li><b id="q-imp"></b> événements localisés au niveau province ou moins précis : les tours du globe sont approximatives</li>
-            <li><b id="q-unc"></b> événements « peu clairs » (event_clarity = 2)</li>
-            <li>Morts = <b>estimations</b> (bornes low / high), pas des comptes exacts</li>
-            <li>Champs de texte souvent vides : en-tête de source <b id="q-hl"></b> %, district (adm_2) <b id="q-a2"></b> %</li>
-            <li>Seuls les événements que l'UCDP peut sourcer sont comptés</li>
+            <li><span><b id="q-imp"></b> événements localisés au niveau province ou moins précis : les tours du globe sont approximatives</span></li>
+            <li><span><b id="q-unc"></b> événements « peu clairs » (event_clarity = 2)</span></li>
+            <li><span>Morts = <b>estimations</b> (bornes low / high), pas des comptes exacts</span></li>
+            <li><span>Champs de texte souvent vides : en-tête de source <b id="q-hl"></b> %, district (adm_2) <b id="q-a2"></b> %</span></li>
+            <li><span>Seuls les événements que l'UCDP peut sourcer sont comptés</span></li>
           </ul>
         </article>
       </div>
@@ -150,17 +150,16 @@
   <section class="slide" id="s4" aria-label="Méthodes, outils et IA">
     <div class="wrap">
       <header>
-        <p class="kicker" data-reveal>Étape 4 · Expliquer</p>
+        <p class="kicker" data-reveal>Étape 4 · Ma façon de travailler</p>
         <h1 class="display sm" data-reveal>Méthodes, outils et IA</h1>
       </header>
 
       <div class="pipe" data-reveal>
         <div class="beam" aria-hidden="true"><i></i></div>
-        <div class="node"><i data-i="database"></i><b>CSV brut</b><small>UCDP GED</small></div>
-        <div class="node"><i data-i="search"></i><b>explore.py</b><small>vérifie la qualité</small></div>
-        <div class="node"><i data-i="wrench"></i><b>clean.py</b><small>nettoie, ajoute des colonnes</small></div>
-        <div class="node"><i data-i="layers"></i><b>aggregate.py</b><small>résumés JSON</small></div>
-        <div class="node"><i data-i="chart"></i><b>Page web</b><small>Plotly.js + globe.gl</small></div>
+        <div class="node"><i data-i="search"></i><b>1 · Chercher</b><small>Trouver un jeu de données avec l'IA, à partir des sujets qui m'intéressent</small></div>
+        <div class="node"><i data-i="database"></i><b>2 · Préparer le projet</b><small>Créer le dépôt GitHub, donner à l'IA les consignes et le jeu de données</small></div>
+        <div class="node"><i data-i="layers"></i><b>3 · Planifier et construire</b><small>Bâtir une feuille de route étape par étape, la vérifier, puis la faire mettre en place par l'IA</small></div>
+        <div class="node"><i data-i="check"></i><b>4 · Analyser et peaufiner</b><small>Examiner le résultat et retoucher le style, le texte, l'information et le visuel</small></div>
       </div>
 
       <div class="bento b3">
@@ -168,7 +167,7 @@
           <h2>Outils et décisions</h2>
           <ul class="badges"><li>Python</li><li>pandas</li><li>JSON</li><li>Plotly.js</li><li>globe.gl</li><li>GitHub Pages</li></ul>
           <ul class="why">
-            <li>Tout le calcul lourd est fait une seule fois, en Python</li>
+            <li>CSV → <code>explore.py</code> → <code>clean.py</code> → <code>aggregate.py</code> → page web : le calcul lourd est fait une seule fois</li>
             <li>JSON agrégés (&lt; 2 Mo chacun) : le navigateur ne charge jamais les <span data-meta="events"></span> lignes</li>
             <li>HTML, CSS et JS simples, sans framework, bibliothèques à version fixée</li>
             <li>Une étape = un commit ; le CSV de 274 Mo reste hors du dépôt</li>
@@ -178,7 +177,8 @@
         <article class="card" data-reveal>
           <h2>Où l'IA (Claude) a servi</h2>
           <ul class="why">
-            <li><b>Planification</b> : plan du projet, choix du globe 3D</li>
+            <li><b>Recherche</b> : trouver le jeu de données</li>
+            <li><b>Planification</b> : feuille de route, choix du globe 3D</li>
             <li><b>Code</b> : scripts Python et page web écrits avec Claude Code</li>
             <li><b>Rédaction</b> : textes des diapositives</li>
           </ul>

@@ -184,3 +184,45 @@ i[data-i] svg { width: 100%; height: 100%; fill: none; stroke: currentColor; str
 
 .count { margin: .3rem 0 0; text-align: right; font-size: .75rem; color: var(--muted); }
 .legend em { margin-left: .8rem; font-style: normal; }
+
+/* slides 1, 2, 4: use the whole screen (text grows with screen height, cards stretch) */
+@media (min-width: 1001px) {
+  :is(#s1, #s2, #s4) { --t: clamp(.9rem, 1.95vh, 1.5rem); }
+  :is(#s1, #s2, #s4) .wrap { width: min(112rem, 100% - 5rem); min-height: 100%; display: flex; flex-direction: column; }
+  :is(#s1, #s2, #s4) .bento { flex: 1; }
+  :is(#s1, #s2, #s4) .card { font-size: var(--t); padding: 1.2em 1.4em; display: flex; flex-direction: column; }
+  :is(#s1, #s2, #s4) .card h2 { font-size: 1.25em; }
+  :is(#s1, #s2, #s4) .card p:last-child { margin-bottom: 0; }
+  :is(#s1, #s2, #s4) .kicker { font-size: var(--t); }
+  .hero .lede { max-width: none; font-size: calc(var(--t) * 1.3); }
+  .ticker b { font-size: calc(var(--t) * 2.8); } .ticker span { font-size: var(--t); }
+  #s1 .card { justify-content: space-between; }
+  .pills li, .badges li, .callout.emerald { font-size: .95em; }
+  .facts dt { font-size: .7em; } .facts dd { font-size: 1.4em; }
+  .checks { flex: 1; display: flex; flex-direction: column; }
+  .checks li { flex: 1; align-items: center; font-size: .95em; }
+  .ba-side dt { font-size: .75em; } .ba-side dd { font-size: 1.6em; }
+  .steps { flex: 1; display: flex; flex-direction: column; justify-content: space-around; font-size: .95em; }
+  .limits { flex: 1; display: flex; flex-direction: column; gap: .6em; }
+  .limits li { flex: 1; display: flex; align-items: center; flex-wrap: wrap; align-content: center; column-gap: .3em; margin: 0; font-size: .98em; }
+  #s4 .why { flex: 1; display: flex; flex-direction: column; justify-content: space-around; }
+  #s4 .checks.plain li { flex: 1; align-items: center; }
+  .node b { font-size: var(--t); } .node small { font-size: calc(var(--t) * .85); }
+}
+@media (min-width: 1001px) {
+  #s1 .pills, #s1 .why, #s1 .facts { flex: 1; margin: .6em 0; }
+  #s1 .pills { flex-direction: column; flex-wrap: nowrap; justify-content: space-around; }
+  #s1 .pills li { flex: 0 1 2.6em; border-radius: .7em; font-size: 1em; padding: .3em 1em; }
+  #s1 .why { display: flex; flex-direction: column; justify-content: space-around; font-size: 1.05em; }
+  #s1 .facts { grid-template-columns: 1fr; align-content: space-around; }
+  #s1 .facts div { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--line); }
+  #s1 .facts dd { font-size: 1.8em; }
+  #s4 { --t: clamp(.85rem, 1.7vh, 1.35rem); }
+  #s4 .display { margin-bottom: .4rem; }
+  #s4 .pipe { margin-bottom: .4rem; padding: .5rem 0; } #s4 .beam { top: 2.1rem; }
+  #s4 .quote { margin-top: .8rem; padding: .8rem 1.6rem; } #s4 .quote p { font-size: calc(var(--t) * 1.4); margin-bottom: .2rem; }
+}
+
+/* slide 4: 4-step working method */
+.pipe .node small { line-height: 1.35; padding: 0 .4rem; }
+@media (min-width: 1001px) { #s1 .display { font-size: clamp(2.2rem, 3.9vw, 5rem); } } /* keeps the title on one line */

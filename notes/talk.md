@@ -5,7 +5,7 @@
 | 1. Jeu de données | 1 min | UCDP GED, 417 968 événements, 49 champs, la question |
 | 2. Prétraitement | 1 min | Tout vérifié; un seul problème (low/high); avant/après |
 | 3. Tableau de bord | 3 min 30 | KPI, globe, démo des filtres (Afrique + 2010–2020, clic sur un pays) |
-| 4. Méthodes et IA | 1 min 30 | Pipeline, rôle de l'IA, 4 vérifications |
+| 4. Méthodes et IA | 1 min 30 | Ma méthode en 4 étapes, rôle de l'IA, 4 vérifications |
 
 ## Limites à dire à voix haute
 - L'UCDP ne compte que les événements qu'elle peut sourcer.
