@@ -64,7 +64,7 @@
             <li>Du temps, de l'espace et des catégories : évolution, globe, comparaisons</li>
             <li>Données ouvertes, gros volume, qualité documentée</li>
           </ul>
-          <blockquote class="callout emerald"><b>Question guide</b><br>Comment la violence organisée a-t-elle évolué depuis 1989 : qui meurt, où, et dans quel type de conflit&nbsp;?</blockquote>
+          <blockquote class="callout emerald"><b>Question guide</b><br>Depuis 1989, qui paie le prix de la violence&nbsp;: où des vies sont-elles perdues, dans quels conflits, et comment cela a-t-il changé&nbsp;?</blockquote>
         </article>
       </div>
     </div>
@@ -111,11 +111,12 @@
         <article class="card" data-reveal>
           <h2><i data-i="alert"></i>Limites restantes</h2>
           <ul class="limits">
-            <li><span><b id="q-imp"></b> événements localisés au niveau province ou moins précis : les tours du globe sont approximatives</span></li>
-            <li><span><b id="q-unc"></b> événements « peu clairs » (event_clarity = 2)</span></li>
-            <li><span>Morts = <b>estimations</b> (bornes low / high), pas des comptes exacts</span></li>
-            <li><span>Champs de texte souvent vides : en-tête de source <b id="q-hl"></b> %, district (adm_2) <b id="q-a2"></b> %</span></li>
-            <li><span>Seuls les événements que l'UCDP peut sourcer sont comptés</span></li>
+            <li><span><b data-lim="low_millions"></b> à <b data-lim="high_millions"></b> millions de morts (meilleure estimation : <b data-lim="best_millions"></b>)<small>Des estimations : lire des ordres de grandeur</small></span></li>
+            <li><span>Seulement les morts <b>directes</b> et les événements que l'UCDP peut sourcer<small>Famine et maladie exclues ; couverture inégale</small></span></li>
+            <li><span><b data-lim="unclear_pct"></b> % d'événements « peu clairs », mais <b data-lim="unclear_deaths_pct"></b> % des morts<small>Une ligne peut résumer plusieurs incidents</small></span></li>
+            <li><span><b data-lim="imprecise_pct"></b> % localisés à la province ou moins précis (<b data-lim="imprecise_deaths_pct"></b> % des morts)<small>Les tours du globe sont approximatives</small></span></li>
+            <li><span><b data-lim="unknown_deaths_pct"></b> % des morts de statut inconnu<small>La part de civils ne compte que les civils identifiés</small></span></li>
+            <li><span>Texte souvent vide : titre de source <b data-lim="missing_headline_pct"></b> %, district <b data-lim="missing_adm2_pct"></b> %<small>Champs non utilisés dans l'analyse</small></span></li>
           </ul>
         </article>
       </div>
@@ -166,31 +167,36 @@
         <article class="card" data-reveal>
           <h2>Outils et décisions</h2>
           <ul class="badges"><li>Python</li><li>pandas</li><li>JSON</li><li>Plotly.js</li><li>globe.gl</li><li>GitHub Pages</li></ul>
+          <ol class="why">
+            <li><code>explore.py</code> <b>cherche</b> les problèmes</li>
+            <li><code>clean.py</code> <b>corrige</b> les données</li>
+            <li><code>aggregate.py</code> <b>résume</b> en petits fichiers</li>
+            <li>La page web <b>affiche</b> les graphiques</li>
+          </ol>
+          <p><b>Mes décisions</b></p>
           <ul class="why">
-            <li>CSV → <code>explore.py</code> → <code>clean.py</code> → <code>aggregate.py</code> → page web : le calcul lourd est fait une seule fois</li>
-            <li>JSON agrégés (&lt; 2 Mo chacun) : le navigateur ne charge jamais les <span data-meta="events"></span> lignes</li>
-            <li>HTML, CSS et JS simples, sans framework, bibliothèques à version fixée</li>
-            <li>Une étape = un commit ; le CSV de 274 Mo reste hors du dépôt</li>
-            <li>Toutes les années gardées, nettoyage léger : on corrige seulement ce que les vérifications trouvent</li>
+            <li>Garder toutes les années, corriger seulement les erreurs trouvées</li>
           </ul>
+          <div class="callout emerald"><b>Page rapide : calculer à l'avance</b><br><span class="mono">274 Mo → 4,3 Mo</span>, 64 fois moins<br>Ex. : 137 événements (Afghanistan 1989, étatique) → 1 ligne</div>
         </article>
         <article class="card" data-reveal>
           <h2>Où l'IA (Claude) a servi</h2>
           <ul class="why">
-            <li><b>Recherche</b> : trouver le jeu de données</li>
-            <li><b>Planification</b> : feuille de route, choix du globe 3D</li>
-            <li><b>Code</b> : scripts Python et page web écrits avec Claude Code</li>
-            <li><b>Rédaction</b> : textes des diapositives</li>
+            <li><b>Recherche</b> : proposer des jeux de données selon mes intérêts.<br><em>Moi : choisir le sujet et la source</em></li>
+            <li><b>Planification</b> : feuille de route étape par étape, globe 3D.<br><em>Moi : donner les consignes, vérifier le plan</em></li>
+            <li><b>Code</b> : scripts Python et page web (Claude Code).<br><em>Moi : avancer étape par étape, contrôler</em></li>
+            <li><b>Visuel et textes</b> : première version.<br><em>Moi : retoucher le style, le texte, l'information</em></li>
           </ul>
-          <p class="muted">Rien n'est pris tel quel : chaque résultat est vérifié, puis je dois pouvoir l'expliquer.</p>
+          <p class="muted">L'IA peut se tromper avec assurance : je vérifie, et je dois pouvoir expliquer.</p>
         </article>
         <article class="card" data-reveal>
           <h2>Comment j'ai vérifié</h2>
           <ul class="checks plain">
-            <li><i data-i="check"></i><span>Les totaux de chaque JSON égalent ceux de la table propre (<i>assert</i> dans le script)</span></li>
-            <li><i data-i="check"></i><span>Relancer <code>clean.py</code> donne exactement le même fichier (même empreinte)</span></li>
-            <li><i data-i="check"></i><span>Filtre Afrique 2010–2020 sur la page = calcul indépendant en pandas (mêmes 5 indicateurs)</span></li>
-            <li><i data-i="check"></i><span>Lecture à l'œil d'exemples réels (avant/après des bornes low/high)</span></li>
+            <li><i data-i="check"></i><span><b>Bons chiffres ?</b> 6 chiffres recalculés depuis le fichier d'origine : identiques</span></li>
+            <li><i data-i="check"></i><span><b>Rien de perdu ?</b> Les totaux des résumés égalent ceux des données nettoyées</span></li>
+            <li><i data-i="check"></i><span><b>Résultat stable ?</b> Relancer le nettoyage donne le même fichier</span></li>
+            <li><i data-i="check"></i><span><b>Filtres justes ?</b> Afrique 2010–2020 : même résultat sur la page et en Python</span></li>
+            <li><i data-i="check"></i><span><b>Correction logique ?</b> Exemples avant/après relus à l'œil</span></li>
           </ul>
         </article>
       </div>

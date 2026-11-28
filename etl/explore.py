@@ -77,6 +77,14 @@ open("notes/quality_log.md", "w", encoding="utf-8").write("\n".join(out))
 # Numbers for slide 2 (so nothing on the slide is typed by hand)
 import json
 
+def pct(x):
+    return round(float(x) * 100, 1)
+
+
+def death_share(mask):
+    return pct(df.loc[mask, "best"].sum() / df["best"].sum())
+
+
 ex = order_bad.iloc[0]
 quality = {
     "rows": n, "columns": c, "values": n * c,
@@ -98,6 +106,15 @@ quality = {
         "unclear_events": int((df["event_clarity"] == 2).sum()),
         "missing_headline_pct": round(float(miss["source_headline"] / n * 100), 1),
         "missing_adm2_pct": round(float(miss["adm_2"] / n * 100), 1),
+        "imprecise_pct": pct((df["where_prec"] >= 4).mean()),
+        "imprecise_deaths_pct": death_share(df["where_prec"] >= 4),
+        "unclear_pct": pct((df["event_clarity"] == 2).mean()),
+        "unclear_deaths_pct": death_share(df["event_clarity"] == 2),
+        "unknown_deaths_pct": pct(df["deaths_unknown"].sum() / df["best"].sum()),
+        # same bound correction as clean.py
+        "low_millions": round(float(df[["low", "best"]].min(axis=1).sum()) / 1e6, 1),
+        "best_millions": round(float(df["best"].sum()) / 1e6, 1),
+        "high_millions": round(float(df[["high", "best"]].max(axis=1).sum()) / 1e6, 1),
     },
 }
 json.dump(quality, open("docs/data/quality.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)

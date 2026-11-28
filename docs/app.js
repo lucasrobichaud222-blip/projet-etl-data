@@ -83,8 +83,7 @@ function fillQuality() {
   set("q-id", e.id); set("q-where", `${e.country}, ${e.year}`);
   set("q-b1", e.best); set("q-l1", e.low_before); set("q-h1", e.high_before);
   set("q-b2", e.best); set("q-l2", e.low_after); set("q-h2", e.high_after);
-  set("q-imp", fmtN(L.imprecise_location)); set("q-unc", fmtN(L.unclear_events));
-  set("q-hl", L.missing_headline_pct); set("q-a2", L.missing_adm2_pct);
+  document.querySelectorAll("[data-lim]").forEach(el => (el.textContent = L[el.dataset.lim].toLocaleString("fr-CA")));
 }
 
 // Fetch every file; a failed file is reported on the page instead of leaving blanks.

@@ -50,6 +50,14 @@
   "imprecise_location": 62751,
   "unclear_events": 30561,
   "missing_headline_pct": 23.3,
-  "missing_adm2_pct": 17.6
+  "missing_adm2_pct": 17.6,
+  "imprecise_pct": 15.0,
+  "imprecise_deaths_pct": 30.6,
+  "unclear_pct": 7.3,
+  "unclear_deaths_pct": 43.9,
+  "unknown_deaths_pct": 16.5,
+  "low_millions": 3.5,
+  "best_millions": 4.3,
+  "high_millions": 6.4
  }
 }
