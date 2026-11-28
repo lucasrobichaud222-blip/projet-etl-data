@@ -74,6 +74,15 @@ save("meta.json", {
     "deadliest_year": int(df.groupby("year")["best"].sum().idxmax()), "grid_cells": len(cells),
     "generated": str(date.today())})
 
+# data.js: the same JSON as a script, because browsers block fetch() on a double-clicked file
+names = ["meta", "quality", "by_country_year", "top_conflicts", "deaths_split", "grid_cells", "countries"]
+bundle = {}
+for n in names:
+    with open(f"{OUT}/{n}.json", encoding="utf-8") as f:
+        bundle[n] = json.load(f)
+with open("docs/data.js", "w", encoding="utf-8") as f:
+    f.write("window.DATA=" + json.dumps(bundle, ensure_ascii=False, separators=(",", ":")) + ";\n")
+
 for n, s in sizes.items():
     print(f"{n}: {s / 1e6:.2f} MB")
 assert all(s < 2e6 for n, s in sizes.items() if n != "grid_cells.json") and sizes["grid_cells.json"] < 3e6

@@ -1,5 +1,4 @@
-const FILES = ["meta", "quality", "by_country_year", "top_conflicts", "deaths_split", "grid_cells", "countries"];
-const D = {};
+const D = window.DATA || {}; // data.js (written by etl/aggregate.py): no fetch, so index.html opens by double-click
 const LABELS = ["Données", "Préparation", "Tableau de bord", "Méthodes"];
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let cur = 0;
@@ -86,9 +85,10 @@ function fillQuality() {
   document.querySelectorAll("[data-lim]").forEach(el => (el.textContent = L[el.dataset.lim].toLocaleString("fr-CA")));
 }
 
-// Fetch every file; a failed file is reported on the page instead of leaving blanks.
-Promise.all(FILES.map(f => fetch(`data/${f}.json`).then(r => { if (!r.ok) throw new Error(f + " " + r.status); return r.json(); }).then(j => (D[f] = j))))
+// Runs after go() below; missing data is reported on the page instead of leaving blanks.
+Promise.resolve()
   .then(() => {
+    if (!D.meta) throw new Error("data.js manquant");
     document.querySelectorAll("[data-meta]").forEach(el => (el.textContent = fmtN(D.meta[el.dataset.meta])));
     fillQuality();
     render();
@@ -96,7 +96,7 @@ Promise.all(FILES.map(f => fetch(`data/${f}.json`).then(r => { if (!r.ok) throw 
   })
   .catch(e => {
     console.error("erreur de chargement", e);
-    document.body.insertAdjacentHTML("afterbegin", `<p style="position:fixed;z-index:20;top:1rem;left:1rem;background:#FBE6E9;color:#8A0A1F;padding:.6rem 1rem;border-radius:.6rem">Données non chargées (${e.message}). Ouvrir la page via un serveur web, pas en double-cliquant le fichier.</p>`);
+    document.body.insertAdjacentHTML("afterbegin", `<p style="position:fixed;z-index:20;top:1rem;left:1rem;background:#FBE6E9;color:#8A0A1F;padding:.6rem 1rem;border-radius:.6rem">Données non chargées (${e.message}).</p>`);
   });
 
 go((parseInt(location.hash.slice(1)) || 1) - 1);

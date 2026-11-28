@@ -15,12 +15,12 @@ The CSV is 274 MB and is **not** in this repo.
 
 ```
 pip install pandas
+python etl/explore.py
 python etl/clean.py
 python etl/aggregate.py
-cd docs && python -m http.server
 ```
 
-Then open http://localhost:8000.
+Then double-click `docs/index.html` (internet needed for the chart libraries).
 
 ## Live link
 
